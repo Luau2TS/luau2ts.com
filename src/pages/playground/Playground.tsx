@@ -477,8 +477,8 @@ export default function Playground(): ReactNode {
 	const setSourceValue = flipped ? setTsSource : setLuauSource;
 	const sourceLabel = flipped ? "TypeScript source" : "Luau source";
 	const outputLabel = flipped ? "Luau output" : "TypeScript output";
-	const sourceLang = flipped ? "tsx" : "lua";
-	const outputLang = flipped ? "lua" : "tsx";
+	const sourceLang = flipped ? "typescript" : "lua";
+	const outputLang = flipped ? "lua" : "typescript";
 
 	return (
 		<div className={styles.root}>
@@ -536,7 +536,13 @@ export default function Playground(): ReactNode {
 
 				<button
 					type="button"
-					onClick={() => setDirection(d => (d === "luauToTs" ? "tsToLuau" : "luauToTs"))}
+					onClick={e => {
+						// Blur the button immediately so the next Space keypress
+						// in the editor doesn't re-activate it (default <button>
+						// behavior: Space when focused fires onClick again).
+						e.currentTarget.blur();
+						setDirection(d => (d === "luauToTs" ? "tsToLuau" : "luauToTs"));
+					}}
 					className={styles.swap}
 					aria-label="Swap direction"
 					title={
@@ -587,6 +593,73 @@ function SourcePane({
 		}
 	}
 
+	// Tab handling: insert a literal tab character at the cursor (or
+	// indent each line of a multi-line selection). Shift+Tab outdents
+	// the start of each selected line. Browser default Tab moves focus,
+	// which is wrong in a code editor.
+	function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
+		if (e.key !== "Tab") return;
+		e.preventDefault();
+		const ta = e.currentTarget;
+		const start = ta.selectionStart;
+		const end = ta.selectionEnd;
+		const before = source.slice(0, start);
+		const inside = source.slice(start, end);
+		const after = source.slice(end);
+
+		if (start === end) {
+			// No selection: insert a single tab and advance the cursor.
+			const next = before + "\t" + after;
+			onChange(next);
+			requestAnimationFrame(() => {
+				ta.selectionStart = ta.selectionEnd = start + 1;
+			});
+			return;
+		}
+
+		// Selection spans one or more lines. Operate on whole lines so
+		// re-indenting feels predictable.
+		const lineStart = before.lastIndexOf("\n") + 1;
+		const head = source.slice(0, lineStart);
+		const block = source.slice(lineStart, end);
+		const lines = block.split("\n");
+
+		let newBlock: string;
+		let delta: number;
+		if (e.shiftKey) {
+			// Outdent: strip a leading tab or up to 4 leading spaces.
+			let removed = 0;
+			newBlock = lines
+				.map(line => {
+					if (line.startsWith("\t")) {
+						removed += 1;
+						return line.slice(1);
+					}
+					const sp = line.match(/^ {1,4}/);
+					if (sp) {
+						removed += sp[0].length;
+						return line.slice(sp[0].length);
+					}
+					return line;
+				})
+				.join("\n");
+			delta = -removed;
+		} else {
+			// Indent: prepend a tab to each line.
+			newBlock = lines.map(line => "\t" + line).join("\n");
+			delta = lines.length;
+		}
+
+		const next = head + newBlock + after;
+		onChange(next);
+		requestAnimationFrame(() => {
+			// Keep the same logical selection over the re-indented block.
+			ta.selectionStart = Math.max(lineStart, start + (e.shiftKey ? Math.min(0, delta) : 1));
+			ta.selectionEnd = end + delta;
+			void inside;
+		});
+	}
+
 	return (
 		<div className={styles.pane}>
 			<div className={styles.paneHeader}>{label}</div>
@@ -602,6 +675,7 @@ function SourcePane({
 					ref={taRef}
 					value={source}
 					onChange={e => onChange(e.target.value)}
+					onKeyDown={handleKeyDown}
 					onScroll={syncScroll}
 					spellCheck={false}
 					className={styles.editor}

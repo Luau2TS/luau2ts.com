@@ -120,6 +120,10 @@
 	white-space: pre;
 	overflow: auto;
 	min-width: 0;
+	/* Tab characters render as 4 spaces wide to match Prettier's tabWidth
+	 * and the example presets' indentation. */
+	tab-size: 4;
+	-moz-tab-size: 4;
 }
 
 .editor:focus {

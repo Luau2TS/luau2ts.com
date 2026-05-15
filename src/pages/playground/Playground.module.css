@@ -86,6 +86,35 @@
 	overflow: hidden;
 }
 
+/* Stack container for the syntax-highlighted overlay + textarea.
+ * Both children are absolutely positioned so the textarea sits on
+ * top of the highlight, glyph-for-glyph. */
+.editorStack {
+	position: relative;
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+}
+
+/* The highlight overlay. Paints token colors but is non-interactive;
+ * the textarea above it is what the user actually types into. */
+.editorOverlay {
+	position: absolute;
+	inset: 0;
+	margin: 0 !important;
+	padding: 0.75rem 1rem !important;
+	font-family: var(--ifm-font-family-monospace) !important;
+	font-size: 0.85rem !important;
+	line-height: 1.55 !important;
+	white-space: pre !important;
+	overflow: auto !important;
+	pointer-events: none;
+	user-select: none;
+	border-radius: 0 !important;
+	tab-size: 4;
+	-moz-tab-size: 4;
+}
+
 .editorGutter {
 	width: 2.75rem;
 	flex-shrink: 0;
@@ -107,7 +136,8 @@
 }
 
 .editor {
-	flex: 1;
+	position: absolute;
+	inset: 0;
 	resize: none;
 	border: 0;
 	outline: 0;
@@ -116,14 +146,25 @@
 	font-size: 0.85rem;
 	line-height: 1.55;
 	background: transparent;
-	color: var(--ifm-font-color-base);
+	/* Text is transparent because the colors come from the highlight
+	 * overlay underneath. caret-color keeps the cursor visible. */
+	color: transparent;
+	caret-color: var(--ifm-font-color-base);
+	-webkit-text-fill-color: transparent;
 	white-space: pre;
 	overflow: auto;
 	min-width: 0;
-	/* Tab characters render as 4 spaces wide to match Prettier's tabWidth
-	 * and the example presets' indentation. */
 	tab-size: 4;
 	-moz-tab-size: 4;
+}
+
+/* Make the textarea's selection highlight readable on top of the
+ * overlay. Without this the selection covers transparent text and
+ * looks like a blank rectangle. */
+.editor::selection {
+	background: rgba(0, 153, 255, 0.35);
+	color: transparent;
+	-webkit-text-fill-color: transparent;
 }
 
 .editor:focus {

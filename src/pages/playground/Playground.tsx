@@ -579,17 +579,25 @@ function SourcePane({
 	onChange: (v: string) => void;
 	prismTheme: import("prism-react-renderer").PrismTheme;
 }): ReactNode {
-	// Line-number gutter: count newlines, render a fixed-width column to
-	// the left of the textarea, scroll-sync via an onScroll handler. The
-	// column's `overflow: hidden` plus a manually-set scrollTop mirrors the
-	// textarea's vertical scroll so multi-page sources stay aligned.
+	// Editor strategy: a transparent <textarea> overlays a syntax-
+	// highlighted <pre> rendered with prism-react-renderer. The textarea
+	// owns the keyboard / caret / selection; the <pre> only paints the
+	// colors. Both have identical font metrics + padding + tab-size so
+	// glyphs line up to the pixel. Scroll is synced both vertically (for
+	// the line-number gutter) and horizontally (so long lines stay
+	// aligned in both layers).
 	const taRef = useRef<HTMLTextAreaElement | null>(null);
+	const overlayRef = useRef<HTMLPreElement | null>(null);
 	const gutterRef = useRef<HTMLDivElement | null>(null);
 	const lineCount = useMemo(() => Math.max(1, source.split("\n").length), [source]);
 
 	function syncScroll(): void {
-		if (gutterRef.current && taRef.current) {
-			gutterRef.current.scrollTop = taRef.current.scrollTop;
+		const ta = taRef.current;
+		if (!ta) return;
+		if (gutterRef.current) gutterRef.current.scrollTop = ta.scrollTop;
+		if (overlayRef.current) {
+			overlayRef.current.scrollTop = ta.scrollTop;
+			overlayRef.current.scrollLeft = ta.scrollLeft;
 		}
 	}
 
@@ -671,24 +679,38 @@ function SourcePane({
 						</div>
 					))}
 				</div>
-				<textarea
-					ref={taRef}
-					value={source}
-					onChange={e => onChange(e.target.value)}
-					onKeyDown={handleKeyDown}
-					onScroll={syncScroll}
-					spellCheck={false}
-					className={styles.editor}
-					aria-label={label}
-				/>
+				<div className={styles.editorStack}>
+					<Highlight code={source} language={lang} theme={prismTheme}>
+						{({ className, style, tokens, getLineProps, getTokenProps }) => (
+							<pre
+								ref={overlayRef}
+								className={`${className} ${styles.editorOverlay}`}
+								style={style}
+								aria-hidden
+							>
+								{tokens.map((line, i) => (
+									<span key={i} {...getLineProps({ line })}>
+										{line.map((token, j) => (
+											<span key={j} {...getTokenProps({ token })} />
+										))}
+										{i < tokens.length - 1 && "\n"}
+									</span>
+								))}
+							</pre>
+						)}
+					</Highlight>
+					<textarea
+						ref={taRef}
+						value={source}
+						onChange={e => onChange(e.target.value)}
+						onKeyDown={handleKeyDown}
+						onScroll={syncScroll}
+						spellCheck={false}
+						className={styles.editor}
+						aria-label={label}
+					/>
+				</div>
 			</div>
-			{/* Keep `lang` and `prismTheme` referenced so the editor pane can
-          later swap to a syntax-highlighted contenteditable surface
-          without changing the prop signature. */}
-			<span style={{ display: "none" }}>
-				{lang}
-				{prismTheme.plain?.color ?? ""}
-			</span>
 		</div>
 	);
 }

@@ -47,7 +47,7 @@ end
 	}
 }
 
-const animals: Animal[] = [];
+const animals = new Array<Animal>();
 for (let i = 1; i <= 3; i++) {
 	animals.push(new Animal(\`animal\${i}\`));
 }
@@ -177,7 +177,7 @@ if (ok) {
 }
 
 function pair(): LuaTuple<[string, number]> {
-	return $tuple("answer", 42);
+	return $tuple("answer", 42) as LuaTuple<[string, number]>;
 }
 
 const [label, value] = pair();
@@ -296,7 +296,7 @@ print("count:", #fruits)
 `,
 		ts: `const fruits = ["apple", "banana", "cherry"];
 
-for (let i = 0; i < fruits.length; i++) {
+for (let i = 0; i < fruits.size(); i++) {
 	const fruit = fruits[i];
 	print(i + 1, fruit);
 }
@@ -314,7 +314,7 @@ for (const [name, price] of pairs(prices)) {
 }
 print("total:", total);
 
-table.insert(fruits, "date");
+fruits.push("date");
 print("count:", fruits.size());
 `,
 	},

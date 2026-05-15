@@ -115,19 +115,18 @@
 	-moz-tab-size: 4;
 
 	/* IDE-style indent guides: a thin vertical line every 4 characters
-	 * across the editor surface. `1ch` is roughly one monospace-glyph
-	 * width, so the guide grid lines up with tab-stops at 4, 8, 12, ...
-	 * cols. Background-attachment: local so the lines scroll with the
-	 * content, not the viewport. */
+	 * across the editor surface. !important is needed because Prism's
+	 * theme sets `background` (shorthand) inline via style={style},
+	 * which would otherwise reset background-image to none. */
 	background-image: linear-gradient(
 		to right,
 		var(--ifm-color-emphasis-200, rgba(127, 127, 127, 0.18)) 1px,
 		transparent 1px
-	);
-	background-size: 4ch 100%;
-	background-position: 1rem 0;
-	background-repeat: repeat-x;
-	background-attachment: local;
+	) !important;
+	background-size: 4ch 100% !important;
+	background-position: 1rem 0 !important;
+	background-repeat: repeat-x !important;
+	background-attachment: local !important;
 }
 
 .editorGutter {
@@ -198,17 +197,17 @@
 	/* Indent guides, matching the editor pane. The line-number span
 	 * inside each .output line is 2rem wide + 0.75rem right margin, so
 	 * the code text starts at padding-left (1rem) + 2.75rem = 3.75rem
-	 * from the pre's left edge. Offset the first guide to that column
-	 * so the lines align with actual indent stops. */
+	 * from the pre's left edge. !important wins over Prism's inline
+	 * background shorthand. */
 	background-image: linear-gradient(
 		to right,
 		var(--ifm-color-emphasis-200, rgba(127, 127, 127, 0.18)) 1px,
 		transparent 1px
-	);
-	background-size: 4ch 100%;
-	background-position: 3.75rem 0;
-	background-repeat: repeat-x;
-	background-attachment: local;
+	) !important;
+	background-size: 4ch 100% !important;
+	background-position: 3.75rem 0 !important;
+	background-repeat: repeat-x !important;
+	background-attachment: local !important;
 }
 
 .output > div {

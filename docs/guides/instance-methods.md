@@ -53,7 +53,7 @@ The compiler resolves the difference by looking up `FindFirstChild` in the Roblo
 
 ## Property access
 
-`inst.Name`, `inst.Parent`, `inst.CFrame` — these compile to identical TS property access. No translation needed.
+`inst.Name`, `inst.Parent`, `inst.CFrame`, these compile to identical TS property access. No translation needed.
 
 ## `WaitForChild`
 
@@ -65,4 +65,4 @@ local part = workspace:WaitForChild("MyPart")
 const part = await workspace.WaitForChild("MyPart");
 ```
 
-The compiler infers that `WaitForChild` yields and inserts `await`. Calls to user-defined functions that transitively yield also get `await` — the compiler runs a pre-pass over the AST to find them.
+The compiler infers that `WaitForChild` yields and inserts `await`. Calls to user-defined functions that transitively yield also get `await`, the compiler runs a pre-pass over the AST to find them.

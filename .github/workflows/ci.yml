@@ -28,7 +28,7 @@ jobs:
           node-version: '22'
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
 
       - run: pnpm prettier
 
@@ -37,7 +37,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Check out luau2ts.com
+        uses: actions/checkout@v6
+        with:
+          path: luau2ts.com
+
+      - name: Check out luau2ts (compiler)
+        uses: actions/checkout@v6
+        with:
+          repository: luau2ts/luau2ts
+          path: luau2ts
 
       - uses: pnpm/action-setup@v6
         with:
@@ -47,7 +56,16 @@ jobs:
         with:
           node-version: '22'
           cache: pnpm
+          cache-dependency-path: luau2ts.com/pnpm-lock.yaml
 
-      - run: pnpm install --frozen-lockfile
+      - name: Build the linked luau2ts compiler
+        working-directory: luau2ts
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
 
-      - run: pnpm build
+      - name: Build the site
+        working-directory: luau2ts.com
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build

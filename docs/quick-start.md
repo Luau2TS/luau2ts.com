@@ -32,12 +32,12 @@ greet("world")
 You get:
 
 ```ts
-// Compiled by luau2ts v0.1.0 — do not edit.
+// Compiled by luau2ts v0.1.0 (do not edit).
 
 function greet(name) {
-    print(`Hello, ${name}`);
+  print(`Hello, ${name}`);
 }
-greet("world");
+greet('world');
 ```
 
 Write the output to a file with `-o`:

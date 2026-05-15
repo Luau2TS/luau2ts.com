@@ -13,7 +13,7 @@ A pragmatic playbook for moving a real Roblox place from `.luau` to `.ts`.
 luau2ts -p default.project.json -o src/ --mode rbxts
 ```
 
-Commit the result. Don't delete the `.luau` source yet — keep it as reference.
+Commit the result. Don't delete the `.luau` source yet, keep it as reference.
 
 ## Phase 2: Get it building
 
@@ -53,4 +53,4 @@ When the TS version is the source of truth, delete the `.luau` files (or keep th
 
 - Don't try to land Phase 1 + Phase 2 + strict typing in one PR. Take it in phases.
 - Don't fight the formatter. Run Prettier or Biome on the compiler output and let it own style.
-- Don't manually edit the `.luau` and re-compile — the round-trip is lossy. After Phase 1, the TS is the source of truth.
+- Don't manually edit the `.luau` and re-compile, the round-trip is lossy. After Phase 1, the TS is the source of truth.

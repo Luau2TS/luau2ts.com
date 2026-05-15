@@ -52,7 +52,7 @@ for (let __i = 0; __i < arr.length; __i++) { const i = __i + 1; const v = arr[__
 | `string.format("%d", n)` | `string.format("%d", n)` (helper) |
 | `string.gsub(s, pat, rep)` | `string.gsub(s, pat, rep)` (helper) |
 | `string.sub(s, i, j)` | `string.sub(s, i, j)` (helper) |
-| `s1 .. s2` | `concat(s1, s2)` (helper) — handles Luau's coercion rules |
+| `s1 .. s2` | `concat(s1, s2)` (helper), handles Luau's coercion rules |
 
 ## Metatables
 

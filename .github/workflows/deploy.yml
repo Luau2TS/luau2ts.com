@@ -25,7 +25,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: Check out luau2ts.com
+        uses: actions/checkout@v6
+        with:
+          path: luau2ts.com
+
+      # The playground page imports `luau2ts` via `link:../luau2ts`, so
+      # the compiler repo has to live as a sibling on disk before
+      # `pnpm install` resolves. Once luau2ts ships to npm we can drop
+      # this checkout and replace the link: with a registry version.
+      - name: Check out luau2ts (compiler)
+        uses: actions/checkout@v6
+        with:
+          repository: luau2ts/luau2ts
+          path: luau2ts
 
       - uses: pnpm/action-setup@v6
         with:
@@ -35,15 +48,24 @@ jobs:
         with:
           node-version: '22'
           cache: pnpm
+          cache-dependency-path: luau2ts.com/pnpm-lock.yaml
 
-      - run: pnpm install --frozen-lockfile
+      - name: Build the linked luau2ts compiler
+        working-directory: luau2ts
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
 
-      - run: pnpm build
+      - name: Install and build the site
+        working-directory: luau2ts.com
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./luau2ts.com/build
           publish_branch: gh-pages
           cname: luau2ts.com

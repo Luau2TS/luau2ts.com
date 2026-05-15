@@ -10,7 +10,7 @@ A longer walkthrough than [Quick start](./quick-start), covering a real Rojo pro
 ## Prerequisites
 
 - **Node 18+** (Node 20 or 22 recommended).
-- **pnpm**, **npm**, or **yarn** — any of them works.
+- **pnpm**, **npm**, or **yarn**, any of them works.
 - **Rojo 7+** is *optional*: only needed if you also want to sync the original Luau into Roblox Studio. `luau2ts` reads `default.project.json` directly without needing Rojo installed.
 
 ## Install

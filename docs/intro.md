@@ -31,6 +31,6 @@ There are three real use cases:
 
 ## Next
 
-- [Quick start](./quick-start) — install and compile your first file.
-- [Setup guide](./setup-guide) — longer walkthrough including Rojo project mode.
-- [CLI usage](./usage) — full flag reference.
+- [Quick start](./quick-start), install and compile your first file.
+- [Setup guide](./setup-guide), longer walkthrough including Rojo project mode.
+- [CLI usage](./usage), full flag reference.

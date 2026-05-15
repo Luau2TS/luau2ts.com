@@ -45,6 +45,6 @@ Emits to `out/Modules/...`.
 
 ## What's not supported (yet)
 
-- `.json` / `.csv` / `.txt` "model files" (data-only Instances). These don't produce TypeScript — they're skipped silently. Add them to your TS code as plain JSON imports if you need them.
+- `.json` / `.csv` / `.txt` "model files" (data-only Instances). These don't produce TypeScript, they're skipped silently. Add them to your TS code as plain JSON imports if you need them.
 - `.rbxm` / `.rbxmx` model bundles. Out of scope; these are binary Roblox formats.
 - Live file watching (`luau2ts -p ... --watch`). Coming in 0.2.

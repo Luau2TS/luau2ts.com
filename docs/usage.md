@@ -27,8 +27,8 @@ Path to a Rojo `*.project.json` file, or a directory containing `default.project
 ### `--mode <name>`
 Emit compatibility mode. One of:
 
-- `rbxts` *(default)* — emits TS that imports from `@rbxts/types`, `@rbxts/services`, etc. Pairs with [roblox-ts](https://roblox-ts.com).
-- `native` — emits TS that imports stdlib helpers from `luau2ts/runtime`. Pairs with a host runtime that mirrors Roblox's Luau API surface.
+- `rbxts` *(default)*, emits TS that imports from `@rbxts/types`, `@rbxts/services`, etc. Pairs with [roblox-ts](https://roblox-ts.com).
+- `native`, emits TS that imports stdlib helpers from `luau2ts/runtime`. Pairs with a host runtime that mirrors Roblox's Luau API surface.
 
 See [Custom emit modes](./guides/custom-emit-modes) for details.
 

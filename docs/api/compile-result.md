@@ -38,4 +38,4 @@ Parser errors discovered during compilation. The compiler still returns the comp
 If `errors.length > 0`, you should consider the output unsafe to ship.
 
 ### `sourceMap`
-Present only when `sourceMap: true` was passed in `CompileOptions`. Standard source-map-v3 JSON shape — feed it directly to any source-map-aware tooling.
+Present only when `sourceMap: true` was passed in `CompileOptions`. Standard source-map-v3 JSON shape, feed it directly to any source-map-aware tooling.

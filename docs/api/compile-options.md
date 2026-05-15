@@ -34,8 +34,8 @@ When `true`, `--` line comments and `--[[ ]]` block comments from the source are
 ### `compatMode`
 Output flavour:
 
-- `'native'` *(default in the library)* — imports stdlib helpers from `luau2ts/runtime`.
-- `'rbxts'` *(default in the CLI)* — emits TS compatible with [roblox-ts](https://roblox-ts.com)'s shim packages.
+- `'native'` *(default in the library)*, imports stdlib helpers from `luau2ts/runtime`.
+- `'rbxts'` *(default in the CLI)*, emits TS compatible with [roblox-ts](https://roblox-ts.com)'s shim packages.
 
 See [Custom emit modes](../guides/custom-emit-modes) for the difference.
 

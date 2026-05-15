@@ -51,7 +51,7 @@ const x = (something as number);
 
 ## `--!strict` / `--!nonstrict`
 
-These directives at the top of a Luau file are dropped from the output — they're Luau-side type-checker hints with no TypeScript equivalent. The TS-side `strict` setting in `tsconfig.json` is what controls strict typing post-compilation.
+These directives at the top of a Luau file are dropped from the output, they're Luau-side type-checker hints with no TypeScript equivalent. The TS-side `strict` setting in `tsconfig.json` is what controls strict typing post-compilation.
 
 ## String interpolation
 
@@ -105,5 +105,5 @@ The `..=` form expands because TypeScript doesn't have a string-concat compound 
 
 ## What's not supported
 
-- `goto` / `::label::` — Luau has no goto, but some hand-written Lua 5.1 code might. Not yet supported.
-- Lua-style escape characters that Luau itself rejects (`\G`, `\K` etc. in old Roblox scripts) — the parser normalises these to bare characters during a pre-pass, so they compile without error.
+- `goto` / `::label::`, Luau has no goto, but some hand-written Lua 5.1 code might. Not yet supported.
+- Lua-style escape characters that Luau itself rejects (`\G`, `\K` etc. in old Roblox scripts), the parser normalises these to bare characters during a pre-pass, so they compile without error.

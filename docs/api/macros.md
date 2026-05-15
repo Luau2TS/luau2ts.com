@@ -41,7 +41,7 @@ The arith fast-path covers `Vector3`, `Vector2`, `Vector3int16`, `Vector2int16`,
 
 ## Roact (rbxts mode)
 
-`Roact.createElement(component, props, children)` triggers `import { Roact } from '@rbxts/roact'` and lowers to `Roact.createElement(...)`. JSX is not produced — the call shape is preserved verbatim.
+`Roact.createElement(component, props, children)` triggers `import { Roact } from '@rbxts/roact'` and lowers to `Roact.createElement(...)`. JSX is not produced, the call shape is preserved verbatim.
 
 ## Adding macros
 

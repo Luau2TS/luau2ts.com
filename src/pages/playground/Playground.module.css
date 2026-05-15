@@ -194,6 +194,21 @@
 	line-height: 1.55 !important;
 	overflow: auto;
 	padding: 0.75rem 1rem !important;
+
+	/* Indent guides, matching the editor pane. The line-number span
+	 * inside each .output line is 2rem wide + 0.75rem right margin, so
+	 * the code text starts at padding-left (1rem) + 2.75rem = 3.75rem
+	 * from the pre's left edge. Offset the first guide to that column
+	 * so the lines align with actual indent stops. */
+	background-image: linear-gradient(
+		to right,
+		var(--ifm-color-emphasis-200, rgba(127, 127, 127, 0.18)) 1px,
+		transparent 1px
+	);
+	background-size: 4ch 100%;
+	background-position: 3.75rem 0;
+	background-repeat: repeat-x;
+	background-attachment: local;
 }
 
 .output > div {

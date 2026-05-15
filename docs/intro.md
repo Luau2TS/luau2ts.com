@@ -26,6 +26,7 @@ There are three real use cases:
 - A library API (`import { compile } from 'luau2ts'`) for embedding the compiler in build pipelines.
 - A `--mode rbxts` emit that drops straight into a roblox-ts project.
 - A `--mode native` emit that imports stdlib helpers from `luau2ts/runtime`.
+- [Two-layer type checking](./guides/type-checking) (`--typecheck`): TypeScript's checker on the output and Luau's checker on the input.
 - 100% Luau conformance against the upstream test suite.
 - Source maps that point each emitted TS statement back to the original `.luau` line.
 

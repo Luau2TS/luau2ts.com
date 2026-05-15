@@ -37,6 +37,10 @@ Emit a `.ts.map` next to each `.ts`. The map points each emitted TS statement ba
 
 When the output is `stdout`, `--sourcemap` is a no-op (a warning is printed). To get a source map you must use `-o`.
 
+### `--check-ts`, `--check-luau`, `--typecheck`
+
+Opt-in type checking. `--check-ts` runs TypeScript's compiler API over the emitted source. `--check-luau` runs Luau's official type checker on the input (requires `@luau2ts/analyzer`, currently a soft notice). `--typecheck` runs both. Diagnostics print to stderr with `[ts:CODE]` or `[luau:CODE]` prefixes; the process exits non-zero on errors. See [Type checking](./guides/type-checking).
+
 ### `-h, --help`
 Show this help text.
 

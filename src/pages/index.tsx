@@ -7,10 +7,34 @@ import Heading from "@theme/Heading";
 
 import styles from "./index.module.css";
 
+const FEATURED_LUAU = `local Animal = setmetatable({}, {})
+Animal.__index = Animal
+
+function Animal.new(name)
+  local self = setmetatable({}, Animal)
+  self.name = name
+  return self
+end
+
+function Animal:greet()
+  return "Hello, " .. self.name
+end`;
+
+const FEATURED_TS = `class Animal {
+  constructor(public name: string) {}
+
+  greet(): string {
+    return \`Hello, \${this.name}\`;
+  }
+}
+
+const yui = new Animal('Yui');
+print(yui.greet());`;
+
 function HomepageHeader() {
 	const { siteConfig } = useDocusaurusContext();
 	return (
-		<header className={clsx("hero hero--primary", styles.heroBanner)}>
+		<header className={clsx("hero", styles.heroBanner)}>
 			<div className="container">
 				<img src="img/logo.png" alt="luau2ts" style={{ width: 160, height: 160, marginBottom: "1.5rem" }} />
 				<Heading as="h1" className="hero__title">
@@ -21,16 +45,39 @@ function HomepageHeader() {
 					<Link className="button button--secondary button--lg" to="/docs/">
 						Get started →
 					</Link>
-					<Link
-						className="button button--outline button--lg"
-						to="/playground"
-						style={{ marginLeft: "0.75rem" }}
-					>
+					<Link className="button button--outline button--lg" to="/playground">
 						Try it live
 					</Link>
 				</div>
 			</div>
 		</header>
+	);
+}
+
+function FeaturedCode(): ReactNode {
+	return (
+		<section className={styles.featured}>
+			<div className="container">
+				<div className={styles.featuredHeader}>Luau in, TypeScript out</div>
+				<div className={styles.featuredGrid}>
+					<div className={styles.featuredPane}>
+						<div className={styles.featuredPaneHeader}>example.luau</div>
+						<pre>
+							<code>{FEATURED_LUAU}</code>
+						</pre>
+					</div>
+					<div className={styles.featuredArrow} aria-hidden>
+						→
+					</div>
+					<div className={styles.featuredPane}>
+						<div className={styles.featuredPaneHeader}>example.ts</div>
+						<pre>
+							<code>{FEATURED_TS}</code>
+						</pre>
+					</div>
+				</div>
+			</div>
+		</section>
 	);
 }
 
@@ -42,8 +89,9 @@ export default function Home(): ReactNode {
 			description="Compile Luau to TypeScript for Roblox. Drop-in compatible with roblox-ts."
 		>
 			<HomepageHeader />
+			<FeaturedCode />
 			<main className={styles.main}>
-				<section className={styles.section}>
+				<section className={clsx(styles.section, styles.sectionWhite)}>
 					<div className="container">
 						<Heading as="h2">Why?</Heading>
 						<p>
@@ -55,23 +103,22 @@ export default function Home(): ReactNode {
 					</div>
 				</section>
 
-				<section className={styles.section}>
+				<section className={clsx(styles.section, styles.sectionBlue)}>
 					<div className="container">
 						<Heading as="h2">Install</Heading>
 						<pre>
 							<code>npm install -g luau2ts</code>
 						</pre>
-						<p>Then:</p>
 						<pre>
-							<code>{`luau2ts foo.luau                     # → stdout
-luau2ts foo.luau -o foo.ts           # → file
-luau2ts src/ -o out/                 # → directory tree
+							<code>{`luau2ts foo.luau                          # → stdout
+luau2ts foo.luau -o foo.ts                # → file
+luau2ts src/ -o out/                      # → directory tree
 luau2ts -p default.project.json -o out/   # → Rojo project`}</code>
 						</pre>
 					</div>
 				</section>
 
-				<section className={styles.section}>
+				<section className={clsx(styles.section, styles.sectionWhite)}>
 					<div className="container">
 						<Heading as="h2">Compatibility</Heading>
 						<p>

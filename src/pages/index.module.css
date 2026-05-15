@@ -1,10 +1,12 @@
 /* Homepage theme: blue-dominant. Hero is a full-bleed bright blue panel
- * with the (now-transparent) logo. Below the hero, alternating bands
- * of darker blue and white. Content cards are white-on-blue so the
- * page reads as "blue with white panels" overall. */
+ * with the (now-transparent) logo. Below the hero, a featured code
+ * panel showing Luau in / TypeScript out side-by-side, then alternating
+ * blue and white bands for Why / Install / Compatibility. Sections are
+ * intentionally tight (2.5rem padding) so the page reads as one
+ * cohesive landing rather than a stack of disconnected blocks. */
 
 .heroBanner {
-	padding: 6rem 0 5rem;
+	padding: 4.5rem 0 3rem;
 	text-align: center;
 	position: relative;
 	overflow: hidden;
@@ -20,8 +22,8 @@
 
 .heroBanner :global(.hero__subtitle) {
 	color: rgba(255, 255, 255, 0.92);
-	font-size: 1.4rem;
-	margin-bottom: 2rem;
+	font-size: 1.35rem;
+	margin-bottom: 1.5rem;
 }
 
 .heroBanner :global(.button--secondary) {
@@ -49,7 +51,7 @@
 
 @media screen and (max-width: 996px) {
 	.heroBanner {
-		padding: 4rem 1rem 3rem;
+		padding: 3rem 1rem 2rem;
 	}
 	.heroBanner :global(.hero__title) {
 		font-size: 2.5rem;
@@ -64,17 +66,14 @@
 	flex-wrap: wrap;
 }
 
-/* Generous gap after the hero so the first content section breathes. */
 .main {
 	padding: 0;
 }
 
 .section {
-	padding: 5rem 0;
+	padding: 2.5rem 0;
 }
 
-/* Alternate band colors so the page visually flips between blue panels
- * and white cards. The HTML alternates which class is applied. */
 .sectionBlue {
 	background: linear-gradient(180deg, #0081d9 0%, #006bb3 100%);
 	color: #ffffff;
@@ -102,16 +101,16 @@
 	max-width: 860px;
 }
 
-/* Code blocks: white card on blue, blue tint on white. */
 .section pre {
 	background: rgba(255, 255, 255, 0.95);
 	color: #0a1a2a;
-	padding: 1.25rem 1.5rem;
+	padding: 1rem 1.25rem;
 	border-radius: 10px;
 	overflow-x: auto;
 	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-	font-size: 0.9rem;
-	line-height: 1.6;
+	font-size: 0.88rem;
+	line-height: 1.55;
+	margin: 0.5rem 0;
 }
 
 .sectionWhite pre {
@@ -122,17 +121,6 @@
 
 .section code {
 	font-size: 0.92em;
-}
-
-.sectionBlue table {
-	background: rgba(255, 255, 255, 0.05);
-	border-radius: 6px;
-}
-
-.sectionBlue th,
-.sectionBlue td {
-	border-color: rgba(255, 255, 255, 0.15);
-	color: #ffffff;
 }
 
 [data-theme="dark"] .sectionWhite {
@@ -147,4 +135,87 @@
 [data-theme="dark"] .sectionWhite pre {
 	background: #0f1620;
 	color: #e0e6ed;
+}
+
+/* Featured code panel sits flush against the hero, with a slight
+ * upward lift so it visually overlaps the hero / next-section seam. */
+.featured {
+	background: #0a1420;
+	color: #e6edf3;
+	padding: 2rem 0;
+	margin: -1rem 0 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.06);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.featuredHeader {
+	text-align: center;
+	margin-bottom: 1.25rem;
+	color: #c5d0db;
+	font-size: 0.9rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.featuredGrid {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: stretch;
+	gap: 0;
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+.featuredArrow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #4db5ff;
+	font-size: 1.6rem;
+	padding: 0 1rem;
+	user-select: none;
+}
+
+.featuredPane {
+	background: #0e1a2b;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 8px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.featuredPaneHeader {
+	font-family: var(--ifm-font-family-monospace);
+	font-size: 0.75rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #7b8ba0;
+	padding: 0.55rem 1rem;
+	background: rgba(255, 255, 255, 0.03);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.featuredPane pre {
+	margin: 0 !important;
+	padding: 0.9rem 1rem !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	border-radius: 0 !important;
+	font-size: 0.82rem;
+	line-height: 1.55;
+	color: #e6edf3;
+	overflow-x: auto;
+	flex: 1;
+}
+
+@media screen and (max-width: 800px) {
+	.featuredGrid {
+		grid-template-columns: 1fr;
+	}
+	.featuredArrow {
+		transform: rotate(90deg);
+		padding: 0.5rem 0;
+	}
 }

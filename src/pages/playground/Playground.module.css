@@ -172,11 +172,15 @@
  * style).
  */
 .swap {
-	order: 1;
+	/* DOM order is SourcePane > button > OutputPane, so the default
+	 * flex order keeps it visually between the two panes. The negative
+	 * horizontal margins pull the panes inward so the button sits on
+	 * the seam, Google-Translate style. */
 	align-self: center;
 	width: 44px;
 	height: 44px;
 	margin: 0 -22px;
+	position: relative;
 	border-radius: 50%;
 	border: 1px solid var(--ifm-color-emphasis-300);
 	background: var(--ifm-background-color);

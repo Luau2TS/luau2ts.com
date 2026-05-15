@@ -3,63 +3,325 @@ import { Highlight, themes } from "prism-react-renderer";
 import styles from "./Playground.module.css";
 import { bootstrapWorkerTypings } from "./_typings";
 
-const DEFAULT_LUAU = `local Workspace = game:GetService("Workspace")
-local Players = game:GetService("Players")
+interface Example {
+	name: string;
+	luau: string;
+	ts: string;
+}
 
-local Animal = setmetatable({}, {})
+const EXAMPLES: ReadonlyArray<Example> = [
+	{
+		name: "Animal class",
+		luau: `local Animal = setmetatable({}, {})
 Animal.__index = Animal
 
 function Animal.new(name)
-    local self = setmetatable({}, Animal)
-    self:constructor(name)
-    return self
+	local self = setmetatable({}, Animal)
+	self:constructor(name)
+	return self
 end
 
 function Animal:constructor(name)
-    self.name = name
-    self.health = 100
+	self.name = name
+	self.health = 100
 end
 
 function Animal:greet()
-    return "Hello, " .. self.name
-end
-
-local function spawnPart(position: Vector3)
-    local part = Instance.new("Part")
-    part.Position = position + Vector3.new(0, 5, 0)
-    part.Size = Vector3.new(2, 2, 2)
-    part.Color = Color3.fromRGB(255, 100, 100)
-    part.Parent = Workspace
-    return part
+	return "Hello, " .. self.name
 end
 
 local animals = {}
 for i = 1, 3 do
-    table.insert(animals, Animal.new("animal" .. tostring(i)))
+	table.insert(animals, Animal.new("animal" .. tostring(i)))
 end
 
 for _, a in ipairs(animals) do
-    print(a:greet())
+	print(a:greet())
 end
-`;
-
-const DEFAULT_TS = `class Animal {
-    health = 100;
-    constructor(public name: string) {}
-    greet(): string {
-        return \`Hello, \${this.name}\`;
-    }
+`,
+		ts: `class Animal {
+	health = 100;
+	constructor(public name: string) {}
+	greet(): string {
+		return \`Hello, \${this.name}\`;
+	}
 }
 
 const animals: Animal[] = [];
 for (let i = 1; i <= 3; i++) {
-    animals.push(new Animal(\`animal\${i}\`));
+	animals.push(new Animal(\`animal\${i}\`));
 }
 
 for (const a of animals) {
-    print(a.greet());
+	print(a.greet());
 }
-`;
+`,
+	},
+	{
+		name: "Services and Instances",
+		luau: `local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+
+local function spawnPart(position: Vector3, color: Color3)
+	local part = Instance.new("Part")
+	part.Position = position + Vector3.new(0, 5, 0)
+	part.Size = Vector3.new(2, 2, 2)
+	part.Color = color
+	part.Anchored = true
+	part.Parent = Workspace
+	return part
+end
+
+Players.PlayerAdded:Connect(function(player)
+	print(player.Name .. " joined the game")
+	local origin = Vector3.new(0, 10, 0)
+	spawnPart(origin, Color3.fromRGB(255, 100, 100))
+end)
+`,
+		ts: `import { Workspace, Players } from "@rbxts/services";
+import { Part } from "@rbxts/types";
+
+function spawnPart(position: Vector3, color: Color3): Part {
+	const part = new Part();
+	part.Position = position.add(new Vector3(0, 5, 0));
+	part.Size = new Vector3(2, 2, 2);
+	part.Color = color;
+	part.Anchored = true;
+	part.Parent = Workspace;
+	return part;
+}
+
+Players.PlayerAdded.Connect((player) => {
+	print(\`\${player.Name} joined the game\`);
+	const origin = new Vector3(0, 10, 0);
+	spawnPart(origin, Color3.fromRGB(255, 100, 100));
+});
+`,
+	},
+	{
+		name: "Vector math and CFrame",
+		luau: `local function distance(a: Vector3, b: Vector3): number
+	return (a - b).Magnitude
+end
+
+local function lookAt(origin: Vector3, target: Vector3): CFrame
+	return CFrame.new(origin, target)
+end
+
+local a = Vector3.new(0, 0, 0)
+local b = Vector3.new(3, 4, 0)
+print(distance(a, b))
+
+local camera = lookAt(Vector3.new(10, 5, 10), Vector3.zero)
+print(camera.Position)
+
+local spin = CFrame.Angles(0, math.rad(45), 0)
+local rotated = spin * Vector3.new(1, 0, 0)
+print(rotated)
+`,
+		ts: `function distance(a: Vector3, b: Vector3): number {
+	return a.sub(b).Magnitude;
+}
+
+function lookAt(origin: Vector3, target: Vector3): CFrame {
+	return new CFrame(origin, target);
+}
+
+const a = new Vector3(0, 0, 0);
+const b = new Vector3(3, 4, 0);
+print(distance(a, b));
+
+const camera = lookAt(new Vector3(10, 5, 10), Vector3.zero);
+print(camera.Position);
+
+const spin = CFrame.Angles(0, math.rad(45), 0);
+const rotated = spin.mul(new Vector3(1, 0, 0));
+print(rotated);
+`,
+	},
+	{
+		name: "pcall and multi-return",
+		luau: `local function divide(a: number, b: number): number
+	if b == 0 then
+		error("division by zero")
+	end
+	return a / b
+end
+
+local ok, result = pcall(divide, 10, 2)
+if ok then
+	print("result:", result)
+else
+	warn("failed:", result)
+end
+
+local function pair(): (string, number)
+	return "answer", 42
+end
+
+local label, value = pair()
+print(label, value)
+`,
+		ts: `function divide(a: number, b: number): number {
+	if (b === 0) {
+		error("division by zero");
+	}
+	return a / b;
+}
+
+const [ok, result] = pcall(divide, 10, 2);
+if (ok) {
+	print("result:", result);
+} else {
+	warn("failed:", result);
+}
+
+function pair(): LuaTuple<[string, number]> {
+	return $tuple("answer", 42);
+}
+
+const [label, value] = pair();
+print(label, value);
+`,
+	},
+	{
+		name: "Houkago Tea Time (K-On!)",
+		luau: `local Workspace = game:GetService("Workspace")
+
+local Member = setmetatable({}, {})
+Member.__index = Member
+
+function Member.new(name: string, instrument: string, color: Color3)
+	local self = setmetatable({}, Member)
+	self.name = name
+	self.instrument = instrument
+	self.color = color
+	return self
+end
+
+function Member:introduce()
+	return self.name .. " plays the " .. self.instrument
+end
+
+local HoukagoTeaTime = {
+	Member.new("Yui",    "lead guitar",   Color3.fromRGB(255, 180, 80)),
+	Member.new("Mio",    "bass",          Color3.fromRGB(60,  120, 220)),
+	Member.new("Ritsu",  "drums",         Color3.fromRGB(255, 220, 100)),
+	Member.new("Mugi",   "keyboard",      Color3.fromRGB(255, 220, 200)),
+	Member.new("Azusa",  "rhythm guitar", Color3.fromRGB(200, 80,  80)),
+}
+
+local function spawnInstrument(member, x: number)
+	local part = Instance.new("Part")
+	part.Name = member.name .. "_" .. member.instrument
+	part.Size = Vector3.new(2, 3, 1)
+	part.Position = Vector3.new(x, 5, 0)
+	part.Color = member.color
+	part.Anchored = true
+	part.Parent = Workspace
+	return part
+end
+
+for i, member in ipairs(HoukagoTeaTime) do
+	print(member:introduce())
+	spawnInstrument(member, (i - 3) * 4)
+end
+
+print("rehearsal time, " .. tostring(#HoukagoTeaTime) .. " members ready for tea")
+`,
+		ts: `import { Workspace } from "@rbxts/services";
+import { Part } from "@rbxts/types";
+
+class Member {
+	constructor(
+		public name: string,
+		public instrument: string,
+		public color: Color3,
+	) {}
+	introduce(): string {
+		return \`\${this.name} plays the \${this.instrument}\`;
+	}
+}
+
+const HoukagoTeaTime: Array<Member> = [
+	new Member("Yui",   "lead guitar",   Color3.fromRGB(255, 180, 80)),
+	new Member("Mio",   "bass",          Color3.fromRGB(60,  120, 220)),
+	new Member("Ritsu", "drums",         Color3.fromRGB(255, 220, 100)),
+	new Member("Mugi",  "keyboard",      Color3.fromRGB(255, 220, 200)),
+	new Member("Azusa", "rhythm guitar", Color3.fromRGB(200, 80,  80)),
+];
+
+function spawnInstrument(member: Member, x: number): Part {
+	const part = new Part();
+	part.Name = \`\${member.name}_\${member.instrument}\`;
+	part.Size = new Vector3(2, 3, 1);
+	part.Position = new Vector3(x, 5, 0);
+	part.Color = member.color;
+	part.Anchored = true;
+	part.Parent = Workspace;
+	return part;
+}
+
+HoukagoTeaTime.forEach((member, i) => {
+	print(member.introduce());
+	spawnInstrument(member, (i - 2) * 4);
+});
+
+print(\`rehearsal time, \${HoukagoTeaTime.size()} members ready for tea\`);
+`,
+	},
+	{
+		name: "Iteration patterns",
+		luau: `local fruits = { "apple", "banana", "cherry" }
+
+for i, fruit in ipairs(fruits) do
+	print(i, fruit)
+end
+
+local prices: { [string]: number } = {
+	apple = 1.25,
+	banana = 0.50,
+	cherry = 3.00,
+}
+
+local total = 0
+for name, price in pairs(prices) do
+	print(name, price)
+	total = total + price
+end
+print("total:", total)
+
+table.insert(fruits, "date")
+print("count:", #fruits)
+`,
+		ts: `const fruits = ["apple", "banana", "cherry"];
+
+for (let i = 0; i < fruits.length; i++) {
+	const fruit = fruits[i];
+	print(i + 1, fruit);
+}
+
+const prices: Record<string, number> = {
+	apple: 1.25,
+	banana: 0.5,
+	cherry: 3.0,
+};
+
+let total = 0;
+for (const [name, price] of pairs(prices)) {
+	print(name, price);
+	total += price;
+}
+print("total:", total);
+
+table.insert(fruits, "date");
+print("count:", fruits.size());
+`,
+	},
+];
+
+const DEFAULT_LUAU = EXAMPLES[0].luau;
+const DEFAULT_TS = EXAMPLES[0].ts;
 
 type CompatMode = "native" | "rbxts";
 type Direction = "luauToTs" | "tsToLuau";
@@ -78,9 +340,18 @@ export default function Playground(): ReactNode {
 	// Two independent buffers so a swap doesn't lose the user's work in
 	// either pane. The active direction picks which one is editable / which
 	// gets compiled into.
+	const [exampleIndex, setExampleIndex] = useState<number>(0);
 	const [luauSource, setLuauSource] = useState<string>(DEFAULT_LUAU);
 	const [tsSource, setTsSource] = useState<string>(DEFAULT_TS);
 	const [mode, setMode] = useState<CompatMode>("rbxts");
+
+	function selectExample(i: number): void {
+		const ex = EXAMPLES[i];
+		if (!ex) return;
+		setExampleIndex(i);
+		setLuauSource(ex.luau);
+		setTsSource(ex.ts);
+	}
 	const [direction, setDirection] = useState<Direction>("luauToTs");
 	const [output, setOutput] = useState<string>("");
 	const [errors, setErrors] = useState<CompileShape["errors"]>([]);
@@ -214,6 +485,20 @@ export default function Playground(): ReactNode {
 			<div className={styles.toolbar}>
 				<h1 className={styles.title}>{flipped ? "TypeScript → Luau" : "Luau → TypeScript"} playground</h1>
 				<div className={styles.controls}>
+					<label className={styles.modeLabel}>
+						<span>Example:</span>
+						<select
+							value={exampleIndex}
+							onChange={e => selectExample(Number(e.target.value))}
+							className={styles.select}
+						>
+							{EXAMPLES.map((ex, i) => (
+								<option key={i} value={i}>
+									{ex.name}
+								</option>
+							))}
+						</select>
+					</label>
 					{!flipped && (
 						<label className={styles.modeLabel}>
 							<span>Compat mode:</span>
@@ -240,7 +525,7 @@ export default function Playground(): ReactNode {
 			<div className={styles.panes}>
 				{/* Source pane is always on the left, output pane always on the
             right. Flipping the direction swaps which one is editable and
-            which language each one carries — not their physical position. */}
+            which language each one carries (not their physical position). */}
 				<SourcePane
 					source={sourceValue}
 					label={sourceLabel}

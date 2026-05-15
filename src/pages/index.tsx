@@ -34,7 +34,7 @@ print(yui.greet());`;
 function HomepageHeader() {
 	const { siteConfig } = useDocusaurusContext();
 	return (
-		<header className={clsx("hero", styles.heroBanner)}>
+		<header className={clsx("hero hero--primary", styles.heroBanner)}>
 			<div className="container">
 				<img src="img/logo.png" alt="luau2ts" style={{ width: 160, height: 160, marginBottom: "1.5rem" }} />
 				<Heading as="h1" className="hero__title">
@@ -91,7 +91,7 @@ export default function Home(): ReactNode {
 			<HomepageHeader />
 			<FeaturedCode />
 			<main className={styles.main}>
-				<section className={clsx(styles.section, styles.sectionWhite)}>
+				<section className={styles.section}>
 					<div className="container">
 						<Heading as="h2">Why?</Heading>
 						<p>
@@ -103,7 +103,7 @@ export default function Home(): ReactNode {
 					</div>
 				</section>
 
-				<section className={clsx(styles.section, styles.sectionBlue)}>
+				<section className={styles.section}>
 					<div className="container">
 						<Heading as="h2">Install</Heading>
 						<pre>
@@ -118,7 +118,7 @@ luau2ts -p default.project.json -o out/   # → Rojo project`}</code>
 					</div>
 				</section>
 
-				<section className={clsx(styles.section, styles.sectionWhite)}>
+				<section className={styles.section}>
 					<div className="container">
 						<Heading as="h2">Compatibility</Heading>
 						<p>

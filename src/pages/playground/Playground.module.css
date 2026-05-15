@@ -113,6 +113,21 @@
 	border-radius: 0 !important;
 	tab-size: 4;
 	-moz-tab-size: 4;
+
+	/* IDE-style indent guides: a thin vertical line every 4 characters
+	 * across the editor surface. `1ch` is roughly one monospace-glyph
+	 * width, so the guide grid lines up with tab-stops at 4, 8, 12, ...
+	 * cols. Background-attachment: local so the lines scroll with the
+	 * content, not the viewport. */
+	background-image: linear-gradient(
+		to right,
+		var(--ifm-color-emphasis-200, rgba(127, 127, 127, 0.18)) 1px,
+		transparent 1px
+	);
+	background-size: 4ch 100%;
+	background-position: 1rem 0;
+	background-repeat: repeat-x;
+	background-attachment: local;
 }
 
 .editorGutter {

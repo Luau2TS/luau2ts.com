@@ -454,7 +454,16 @@ export default function Playground(): ReactNode {
 			if (!c) return;
 			setBusy(true);
 			try {
-				const r = await c.compile(luauSource, { compatMode: mode });
+				// The playground shows raw transpiler output. Skip both
+				// type-check layers (default-on in the CLI / library) so
+				// the output pane isn't peppered with [ts:...] or [luau:...]
+				// diagnostics that aren't the user's concern when just
+				// exploring how Luau lowers to TS.
+				const r = await c.compile(luauSource, {
+					compatMode: mode,
+					postEmitCheck: false,
+					preEmitCheck: false,
+				});
 				setOutput(r.source);
 				setErrors(r.errors ?? []);
 			} catch (e) {
@@ -541,7 +550,21 @@ export default function Playground(): ReactNode {
 						// in the editor doesn't re-activate it (default <button>
 						// behavior: Space when focused fires onClick again).
 						e.currentTarget.blur();
-						setDirection(d => (d === "luauToTs" ? "tsToLuau" : "luauToTs"));
+						// Port the current output into the OTHER buffer so a
+						// Luau→TS workflow continues as TS→Luau on the same
+						// code (without forcing the user to re-paste). Strip
+						// the "// Compiled by ..." header so it doesn't ride
+						// along as input. Fall through to whatever's already
+						// in the destination buffer if there's no output yet.
+						const stripHeader = (s: string) => s.replace(/^\/\/ Compiled by luau2ts[^\n]*\n+/, "");
+						setDirection(d => {
+							const next: Direction = d === "luauToTs" ? "tsToLuau" : "luauToTs";
+							if (output) {
+								if (next === "tsToLuau") setTsSource(stripHeader(output));
+								else setLuauSource(stripHeader(output));
+							}
+							return next;
+						});
 					}}
 					className={styles.swap}
 					aria-label="Swap direction"

@@ -223,6 +223,14 @@
 	color: var(--ifm-color-emphasis-500);
 	user-select: none;
 	flex-shrink: 0;
+	/* Belt and suspenders: -webkit-user-select for Safari, and a
+	 * ::selection rule below so even if the line-number div ends up in
+	 * a selection range the copied text doesn't include the number. */
+	-webkit-user-select: none;
+}
+
+.lineNum::selection {
+	background: transparent;
 }
 
 .errors {

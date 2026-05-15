@@ -1,23 +1,150 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
+/* Homepage theme: blue-dominant. Hero is a full-bleed bright blue panel
+ * with the (now-transparent) logo. Below the hero, alternating bands
+ * of darker blue and white. Content cards are white-on-blue so the
+ * page reads as "blue with white panels" overall. */
 
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+	padding: 6rem 0 5rem;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+	background: linear-gradient(160deg, #0099ff 0%, #006bb3 100%);
+	color: #ffffff;
+}
+
+.heroBanner :global(.hero__title) {
+	color: #ffffff;
+	font-size: 3.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.heroBanner :global(.hero__subtitle) {
+	color: rgba(255, 255, 255, 0.92);
+	font-size: 1.4rem;
+	margin-bottom: 2rem;
+}
+
+.heroBanner :global(.button--secondary) {
+	background: #ffffff;
+	color: #006bb3;
+	border: 0;
+}
+
+.heroBanner :global(.button--secondary:hover) {
+	background: #f0f8ff;
+	color: #006bb3;
+}
+
+.heroBanner :global(.button--outline) {
+	background: transparent;
+	color: #ffffff;
+	border: 2px solid rgba(255, 255, 255, 0.85);
+}
+
+.heroBanner :global(.button--outline:hover) {
+	background: rgba(255, 255, 255, 0.12);
+	color: #ffffff;
+	border-color: #ffffff;
 }
 
 @media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+	.heroBanner {
+		padding: 4rem 1rem 3rem;
+	}
+	.heroBanner :global(.hero__title) {
+		font-size: 2.5rem;
+	}
 }
 
 .buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
+/* Generous gap after the hero so the first content section breathes. */
+.main {
+	padding: 0;
+}
+
+.section {
+	padding: 5rem 0;
+}
+
+/* Alternate band colors so the page visually flips between blue panels
+ * and white cards. The HTML alternates which class is applied. */
+.sectionBlue {
+	background: linear-gradient(180deg, #0081d9 0%, #006bb3 100%);
+	color: #ffffff;
+}
+
+.sectionBlue :global(h2) {
+	color: #ffffff;
+}
+
+.sectionBlue :global(a) {
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+.sectionWhite {
+	background: #ffffff;
+	color: #1a1a1a;
+}
+
+.sectionWhite :global(h2) {
+	color: #006bb3;
+}
+
+.section :global(.container) {
+	max-width: 860px;
+}
+
+/* Code blocks: white card on blue, blue tint on white. */
+.section pre {
+	background: rgba(255, 255, 255, 0.95);
+	color: #0a1a2a;
+	padding: 1.25rem 1.5rem;
+	border-radius: 10px;
+	overflow-x: auto;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+
+.sectionWhite pre {
+	background: #f4f8fc;
+	color: #0a1a2a;
+	box-shadow: 0 1px 6px rgba(0, 105, 180, 0.08);
+}
+
+.section code {
+	font-size: 0.92em;
+}
+
+.sectionBlue table {
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 6px;
+}
+
+.sectionBlue th,
+.sectionBlue td {
+	border-color: rgba(255, 255, 255, 0.15);
+	color: #ffffff;
+}
+
+[data-theme="dark"] .sectionWhite {
+	background: #1c2733;
+	color: #e0e6ed;
+}
+
+[data-theme="dark"] .sectionWhite :global(h2) {
+	color: #4db5ff;
+}
+
+[data-theme="dark"] .sectionWhite pre {
+	background: #0f1620;
+	color: #e0e6ed;
 }

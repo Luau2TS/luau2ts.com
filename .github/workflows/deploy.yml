@@ -1,0 +1,49 @@
+name: Deploy
+
+# Builds the Docusaurus site and publishes it to GitHub Pages.
+# Custom domain handling: peaceiris/actions-gh-pages writes the CNAME
+# file (luau2ts.com) on every deploy so the apex domain stays bound.
+# Apex-domain DNS: A records to GitHub's IPs 185.199.108.153,
+# .109.153, .110.153, .111.153 (plus optional AAAA records for IPv6).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'   # daily rebuild so the playground picks up new luau2ts releases
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: gh-pages
+          cname: luau2ts.com

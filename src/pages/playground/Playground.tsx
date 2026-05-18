@@ -550,21 +550,14 @@ export default function Playground(): ReactNode {
 						// in the editor doesn't re-activate it (default <button>
 						// behavior: Space when focused fires onClick again).
 						e.currentTarget.blur();
-						// Port the current output into the OTHER buffer so a
-						// Luau→TS workflow continues as TS→Luau on the same
-						// code (without forcing the user to re-paste). Strip
-						// the "// Compiled by ..." header so it doesn't ride
-						// along as input. Fall through to whatever's already
-						// in the destination buffer if there's no output yet.
-						const stripHeader = (s: string) => s.replace(/^\/\/ Compiled by luau2ts[^\n]*\n+/, "");
-						setDirection(d => {
-							const next: Direction = d === "luauToTs" ? "tsToLuau" : "luauToTs";
-							if (output) {
-								if (next === "tsToLuau") setTsSource(stripHeader(output));
-								else setLuauSource(stripHeader(output));
-							}
-							return next;
-						});
+						// Just toggle direction. The two source buffers are
+						// independent, so flipping shows whichever one matches
+						// the new direction. Earlier this also ported the
+						// previous output into the other buffer, but that
+						// compounded across repeat clicks: compiled output
+						// fed back in as source, then re-compiled, etc.,
+						// until both buffers held generated boilerplate.
+						setDirection(d => (d === "luauToTs" ? "tsToLuau" : "luauToTs"));
 					}}
 					className={styles.swap}
 					aria-label="Swap direction"

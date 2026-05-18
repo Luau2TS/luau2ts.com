@@ -26,6 +26,10 @@ Use `-p` to walk a Rojo project file and compile every script it references in o
 
 The output keeps the Rojo suffix. `Main.server.luau` → `Main.server.ts`. This is the same convention `roblox-ts` uses, so a downstream `roblox-ts` build picks up the script kind correctly.
 
+## `.d.ts` sidecar
+
+Every `ModuleScript` also produces a TypeScript declaration file under `out/.types/<same-path>.d.ts`, capturing the inferred shape of the module's exports. The sidecar tree keeps the compiled `.ts` directory clean for `roblox-ts` consumption while making the declarations available for hand-written TypeScript consumers. See [.d.ts generation](./dts-generation) for details and examples.
+
 ## Nested children
 
 A node with children but no `$path` becomes a Folder. Children are written under a subdirectory named after the node:

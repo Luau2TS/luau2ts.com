@@ -19,7 +19,7 @@ luau2ts -p <default.project.json> -o <out/>
 ## Flags
 
 ### `-o, --output <path>`
-Output target. For single-file input, a file path (or omit for stdout). For directory or Rojo project input, an output directory (required).
+Output target. For single-file input, a file path (or omit for stdout). For directory or Rojo project input, an output directory (required). Directory and Rojo modes additionally emit a `.d.ts` for each `ModuleScript` under `<out>/.types/`, mirroring the source layout (see [.d.ts generation](./guides/dts-generation)).
 
 ### `-p, --project <path>`
 Path to a Rojo `*.project.json` file, or a directory containing `default.project.json`. Mutually exclusive with a positional input.

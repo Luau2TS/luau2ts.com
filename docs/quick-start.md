@@ -52,7 +52,7 @@ luau2ts hello.luau -o hello.ts
 luau2ts src/ -o out/
 ```
 
-Walks every `.luau`, `.lua`, `.server.luau`, and `.client.luau` under `src/` and mirrors the tree into `out/`, preserving the `.server` / `.client` suffix on the `.ts` output.
+Walks every `.luau`, `.lua`, `.server.luau`, and `.client.luau` under `src/` and mirrors the tree into `out/`, preserving the `.server` / `.client` suffix on the `.ts` output. Each `ModuleScript` also gets a `.d.ts` declaration file under `out/.types/` mirroring the same layout (see [.d.ts generation](./guides/dts-generation)).
 
 ## Compile a Rojo project
 
@@ -60,7 +60,7 @@ Walks every `.luau`, `.lua`, `.server.luau`, and `.client.luau` under `src/` and
 luau2ts -p default.project.json -o out/
 ```
 
-Reads `default.project.json`, walks every `$path` directory, and emits one `.ts` per discovered Luau script.
+Reads `default.project.json`, walks every `$path` directory, and emits one `.ts` per discovered Luau script. ModuleScripts also get `.d.ts` declaration files in the `out/.types/` sidecar tree.
 
 ## Library use
 
